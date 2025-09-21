@@ -128,7 +128,7 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Verify backend builds
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: false
@@ -136,7 +136,7 @@ jobs:
         target: development
 
     - name: Verify frontend builds
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./frontend
         push: false
