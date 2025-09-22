@@ -1,5 +1,5 @@
-# ROSHNI - Disaster Response Coordination Platform
-
+# ROSHNI - Relief Operations and Support Hub for Nationwide Impact
+## Disaster Response Coordination Platform
 A comprehensive disaster response coordination platform built with Next.js, FastAPI, and PostgreSQL, featuring Google OAuth authentication and role-based access control.
 
 ## 🚀 Quick Start with Docker
