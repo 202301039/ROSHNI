@@ -46,7 +46,7 @@ jobs:
         echo "✅ Node.js dependency check completed"
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: security-reports
         path: |
@@ -118,7 +118,7 @@ jobs:
         echo "✅ Node.js license check completed"
 
     - name: Upload license reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: license-reports
         path: |
