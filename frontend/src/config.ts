@@ -1,5 +1,15 @@
-const rawBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
-const normalizedBaseUrl = rawBaseUrl ? rawBaseUrl.replace(/\/$/, '') : 'http://localhost:8000';
+const rawBaseUrl =
+  import.meta.env.VITE_API_BASE_URL?.trim() ||
+  import.meta.env.VITE_BACKEND_URL?.trim() ||
+  import.meta.env.VITE_API_URL?.trim();
+
+if (!rawBaseUrl) {
+  throw new Error(
+    'Missing backend URL. Set VITE_API_BASE_URL (or VITE_BACKEND_URL) in .env/.env.local so builds pick it up.',
+  );
+}
+
+const normalizedBaseUrl = rawBaseUrl.replace(/\/$/, '');
 
 export const API_BASE_URL = normalizedBaseUrl;
 

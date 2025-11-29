@@ -1,9 +1,9 @@
 """
 Centralized environment loader for the backend.
 
-`.env` and `.env.local` files live one directory above ``backend/``.
-We load `.env` first and then override with `.env.local` when present,
-optionally falling back to per-backend copies if they exist.
+`.env` is always loaded first, then `.env.local` overrides it. This matches the
+expected Docker vs. local dev workflow: Docker images pick up `.env`, while
+local developers drop overrides into `.env.local`.
 """
 from __future__ import annotations
 
@@ -15,20 +15,19 @@ from dotenv import load_dotenv
 _APP_DIR = Path(__file__).resolve().parent
 _BACKEND_DIR = _APP_DIR.parent
 _PROJECT_ROOT = _BACKEND_DIR.parent
-_WORKSPACE_ROOT = _PROJECT_ROOT.parent
 _ENV_LOADED = False
+
+_DEFAULT_ENV_PATHS = (
+    _PROJECT_ROOT / ".env",
+    _PROJECT_ROOT / ".env.local",
+    _BACKEND_DIR / ".env",
+    _BACKEND_DIR / ".env.local",
+)
 
 
 def _load_if_exists(path: Path, *, override: bool) -> None:
     if path.exists():
         load_dotenv(path, override=override)
-
-
-def _load_directory(directory: Path | None) -> None:
-    if not directory:
-        return
-    _load_if_exists(directory / ".env", override=False)
-    _load_if_exists(directory / ".env.local", override=True)
 
 
 def load_environment(extra_paths: Iterable[Path] | None = None) -> None:
@@ -38,11 +37,8 @@ def load_environment(extra_paths: Iterable[Path] | None = None) -> None:
     if _ENV_LOADED:
         return
 
-    seen: set[Path] = set()
-    for directory in (_WORKSPACE_ROOT, _PROJECT_ROOT, _BACKEND_DIR):
-        if directory and directory not in seen:
-            seen.add(directory)
-            _load_directory(directory)
+    for path in _DEFAULT_ENV_PATHS:
+        _load_if_exists(path, override=path.name.endswith(".env.local"))
 
     if extra_paths:
         for path in extra_paths:

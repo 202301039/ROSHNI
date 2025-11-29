@@ -1,8 +1,15 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import App from '../App';
+type AppComponent = typeof import('../App')['default'];
+let App: AppComponent;
+
+const loadApp = async () => {
+  vi.resetModules();
+  vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:8000');
+  ({ default: App } = await import('../App'));
+};
 
 type SessionPayload = {
   user: {
@@ -19,8 +26,13 @@ const mockFetch = (payload: SessionPayload, ok = true) =>
   } as unknown as Response);
 
 describe('App', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    await loadApp();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it('renders the split layout and triggers backend-controlled login', async () => {
@@ -36,7 +48,7 @@ describe('App', () => {
     const loginButton = await screen.findByRole('button', { name: /continue with google/i });
     await user.click(loginButton);
 
-    expect(beginLogin).toHaveBeenCalledWith('http://localhost:8000/api/auth/google/login');
+    expect(beginLogin).toHaveBeenCalledWith('http://localhost:8000/auth/login');
   });
 
   it('shows the signed-in state when the backend session exists', async () => {

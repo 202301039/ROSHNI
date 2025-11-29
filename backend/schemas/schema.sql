@@ -195,7 +195,7 @@ CREATE TABLE question_templates (
     question_text TEXT NOT NULL,
     answer_type VARCHAR(20) NOT NULL,      -- 'boolean' | 'integer' | 'text' | 'choice'
     metadata JSONB,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_active INTEGER NOT NULL DEFAULT 1,
     CONSTRAINT ck_question_answer_type
         CHECK (answer_type IN ('boolean', 'integer', 'text', 'choice'))
 );
@@ -249,8 +249,11 @@ CREATE TABLE disaster_media (
 CREATE TABLE disaster_chat_messages (
     message_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     disaster_id UUID NOT NULL REFERENCES disasters(disaster_id) ON DELETE CASCADE,
+    -- team_id intentionally has no FK; it may reference external/opaque IDs
+    team_id UUID,
     sender_user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     message_text TEXT NOT NULL,
+    is_global BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
