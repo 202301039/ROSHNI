@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 //import { useTheme } from '../../contexts/ThemeContext';
 import './commanderLogsStyles.css';
+import { API_BASE_URL } from '../../config';
 
-const API_BASE = (import.meta && (import.meta as any).env && (import.meta as any).env.VITE_API_URL) || 'http://localhost:8000';
+const API_BASE = API_BASE_URL;
 
 type LogPayload = {
   title?: string | null;

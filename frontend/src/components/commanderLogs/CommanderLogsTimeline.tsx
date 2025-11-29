@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FireExtinguisher, Stethoscope, Siren } from 'lucide-react';
 import type { FiltersState } from './CommanderLogsSidebar';
 import LogModal from './LogModal';
+import { API_BASE_URL } from '../../config';
 
 type LogResponse = {
   log_id: string;
@@ -29,7 +30,7 @@ type ExtendedLogResponse = LogResponse & {
   role?: string;
 };
 
-const API_BASE = (import.meta && (import.meta as any).env && (import.meta as any).env.VITE_API_URL) || 'http://localhost:8000';
+const API_BASE = API_BASE_URL;
 
 const CommanderLogsTimeline: FC<{ disasterId?: string; filters?: FiltersState; refreshSignal?: number; onLogCreated?: () => void }> = ({ disasterId, filters, refreshSignal, onLogCreated }) => {
   const { theme } = useTheme();

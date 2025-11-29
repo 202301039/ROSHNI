@@ -42,7 +42,8 @@ oauth.register(
 @router.get("/login")
 async def login(request: Request):
     """Redirects user to Google Login."""
-    redirect_uri = settings.GOOGLE_REDIRECT_URI
+    # Always direct Google to the backend callback living at /auth/callback on this host.
+    redirect_uri = str(request.url_for("auth_callback"))
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 logger = logging.getLogger(__name__)
